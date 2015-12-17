@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+</head>
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">
+
+    var sampleSVG = d3.select("#viz")
+        .append("svg")
+        .attr("width", 400)
+        .attr("height", 1000);  
+
+    var rect=[
+        {width:30,height:40,weight:1},
+        {width:30,height:40,weight:1},
+        {width:30,height:40,weight:1},
+        {width:30,height:40,weight:1}
+    ];  
+
+    var links=[
+        {source:rect[0],target:rect[1]},
+        {source:rect[1],target:rect[2]},
+        {source:rect[2],target:rect[3]},
+        {source:rect[0],target:rect[3]}
+    ];
+
+    var node=sampleSVG.selectAll("rect")
+        .data(rect)
+        .enter()
+        .append("svg:rect")
+        
+        .attr("width",function(d){return d.width;})
+        .attr("height",function(d){return d.height;});
+
+    var link=sampleSVG.selectAll(".line")
+        .data(links)
+        .enter()
+        .append("line")
+        .style("stroke", "rgb(6,120,155)");
+
+        var force=d3.layout.force()
+            .size([400,800])            
+            .nodes(rect)
+            .links(links)
+            .linkDistance(200)
+            .charge(-1500)
+            .start();
+
+    force.on("tick", function() {
+                
+
+               node
+               .attr("x",function(d){return d.x})
+               .attr("y",function(d){return d.y});
+
+               link.attr("x1", function(d) { return d.source.x; })
+                    .attr("y1", function(d) { return d.source.y; })
+                    .attr("x2", function(d) { return d.target.x; })
+                    .attr("y2", function(d) { return d.target.y; });
+        });
+        
+        
+    
+        
+    </script>
+</body>
+</html>
